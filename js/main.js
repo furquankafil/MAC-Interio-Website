@@ -325,31 +325,88 @@
     });
   });
 
-  /* ---------- Contact / callback form → WhatsApp ---------- */
+  /* ---------- Contact / callback form → EmailJS ---------- */
+  if(window.emailjs && typeof window.emailjs.init === "function"){
+    try{
+      window.emailjs.init({ publicKey: "AtiyfEAHxfs4EocQY" });
+    }catch(err){ /* init once; ignore re-init errors */ }
+  }
   const form = document.getElementById("callback-form");
   if(form){
+    let sending = false;
+    const statusEl = document.getElementById("cf-status");
+    const submitBtn = form.querySelector('button[type="submit"]');
+    const originalBtnText = submitBtn ? submitBtn.textContent : "";
+    const setStatus = (msg, kind) => {
+      if(!statusEl) return;
+      if(!msg){ statusEl.hidden = true; statusEl.textContent = ""; statusEl.className = "form-status"; return; }
+      statusEl.hidden = false;
+      statusEl.textContent = msg;
+      statusEl.className = "form-status" + (kind ? " " + kind : "");
+    };
+    const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     form.addEventListener("submit", e => {
       e.preventDefault();
+      if(sending) return;
       const name = form.querySelector("#cf-name").value.trim();
+      const emailField = form.querySelector("#cf-email");
+      const email = emailField ? emailField.value.trim() : "";
       const phone = form.querySelector("#cf-phone").value.trim();
-      const product = form.querySelector("#cf-product").value;
-      const msg = form.querySelector("#cf-message").value.trim();
       if(!name || !phone){
+        setStatus("Please share your name and phone number so we can call you back.", "error");
         showToast("Please share your name and phone number so we can call you back.");
         return;
       }
-      const text =
-`Hello MAC INTERIO - Little Star,
-
-I would like to request a callback.
-
-Name: ${name}
-Phone: ${phone}
-Product interested in: ${product}
-Message: ${msg || "—"}`;
-      window.open("https://wa.me/" + WA_NUMBER + "?text=" + encodeURIComponent(text), "_blank", "noopener");
-      showToast("Opening WhatsApp with your callback request — press send to confirm.");
-      form.reset();
+      if(!email || !emailRe.test(email)){
+        setStatus("Please enter a valid email address so we can reply to your enquiry.", "error");
+        showToast("Please enter a valid email address so we can reply to your enquiry.");
+        if(emailField) emailField.focus();
+        return;
+      }
+      if(!window.emailjs || typeof window.emailjs.sendForm !== "function"){
+        setStatus("Something went wrong. Please try again or contact us on WhatsApp.", "error");
+        showToast("Something went wrong. Please try again or contact us on WhatsApp.");
+        return;
+      }
+      // Expose visitor email as Reply-To where the template supports it,
+      // and mirror product/service so templates using either variable work.
+      let replyTo = form.querySelector('input[name="reply_to"]');
+      if(!replyTo){
+        replyTo = document.createElement("input");
+        replyTo.type = "hidden";
+        replyTo.name = "reply_to";
+        form.appendChild(replyTo);
+      }
+      replyTo.value = email;
+      const serviceEl = form.querySelector("#cf-product");
+      if(serviceEl){
+        let prodMirror = form.querySelector('input[name="product"]');
+        if(!prodMirror){
+          prodMirror = document.createElement("input");
+          prodMirror.type = "hidden";
+          prodMirror.name = "product";
+          form.appendChild(prodMirror);
+        }
+        prodMirror.value = serviceEl.value;
+      }
+      sending = true;
+      if(submitBtn){ submitBtn.disabled = true; submitBtn.textContent = "Sending..."; }
+      setStatus("", null);
+      window.emailjs.sendForm("service_0kvwwcj", "template_0l2hvbc", form).then(
+        () => {
+          sending = false;
+          if(submitBtn){ submitBtn.disabled = false; submitBtn.textContent = originalBtnText; }
+          setStatus("Thank you. Your enquiry has been sent successfully.", "success");
+          showToast("Thank you. Your enquiry has been sent successfully.");
+          form.reset();
+        },
+        () => {
+          sending = false;
+          if(submitBtn){ submitBtn.disabled = false; submitBtn.textContent = originalBtnText; }
+          setStatus("Something went wrong. Please try again or contact us on WhatsApp.", "error");
+          showToast("Something went wrong. Please try again or contact us on WhatsApp.");
+        }
+      );
     });
   }
 

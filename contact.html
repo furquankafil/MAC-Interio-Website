@@ -19,6 +19,14 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="./css/styles.css">
 <link rel="icon" href="./logo.png">
+<style>
+  /* EmailJS form status — inherits existing form-card language, no redesign */
+  .form-status{margin:16px 0 0;padding:13px 16px;font-size:14px;line-height:1.6;border-left:2px solid var(--gold);background:var(--ivory-2);color:var(--ink-soft);overflow-wrap:break-word}
+  .form-status.success{border-left-color:#1faa53;background:#eef7f0;color:#14532d}
+  .form-status.error{border-left-color:#b3261e;background:#fdecea;color:#7a1f1a}
+  #callback-form button[disabled]{opacity:.7;cursor:wait}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@5/dist/email.min.js"></script>
 </head>
 <body data-page="contact">
 <a class="skip" href="#main">Skip to content</a>
@@ -101,12 +109,13 @@
     <div class="form-card reveal">
       <p class="eyebrow">Request a Callback</p>
       <h2 class="h-md">We call you back.</h2>
-      <p style="color:var(--muted);font-size:14.5px">Share your details — your request opens WhatsApp with everything pre-written. Press send and we take it from there.</p>
+      <p style="color:var(--muted);font-size:14.5px">Share your details — we'll call you back shortly. Prefer instant chat? Reach us on WhatsApp anytime.</p>
       <form id="callback-form" novalidate>
         <div class="field"><label for="cf-name">Name</label><input id="cf-name" name="name" type="text" placeholder="Your full name" autocomplete="name" required></div>
+        <div class="field"><label for="cf-email">Email</label><input id="cf-email" name="email" type="email" placeholder="you@example.com" autocomplete="email" required></div>
         <div class="field"><label for="cf-phone">Phone</label><input id="cf-phone" name="phone" type="tel" placeholder="+91 XXXXX XXXXX" autocomplete="tel" required></div>
         <div class="field"><label for="cf-product">Product Interested In</label>
-          <select id="cf-product" name="product">
+          <select id="cf-product" name="service">
             <option>Dining Set</option>
             <option>Center Table</option>
             <option>Side Table</option>
@@ -119,6 +128,7 @@
         </div>
         <div class="field"><label for="cf-message">Message</label><textarea id="cf-message" name="message" placeholder="Size, material, finish, city for delivery…"></textarea></div>
         <button class="btn" type="submit" style="width:100%;justify-content:center">Request a Callback</button>
+        <p class="form-status" id="cf-status" role="status" aria-live="polite" hidden></p>
       </form>
     </div>
   </div>
