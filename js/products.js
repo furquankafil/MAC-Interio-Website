@@ -1,4 +1,4 @@
-/* MAC INTERIO — Little Star · Product catalogue (single source of truth)
+/* MAC INTERIO · Product catalogue (single source of truth)
    Images are real supplied assets in ./ — never stock. */
 const WA_NUMBER = "919911445459";
 const MAPS_URL = "https://maps.app.goo.gl/KjZcJmGTFaeKezVJA?g_st=ac";
@@ -7,124 +7,124 @@ const PRODUCTS = [
   {
     id: "ribbon-marble-dining",
     name: "The Ribbon Dining Table",
-    cat: "dining", catLabel: "Dining · 6 Seater",
+    cat: "dining", catLabel: "Dining · Six-Seater",
     img: "img7.jpg",
     gallery: ["img7.jpg", "img8.jpg", "img9.jpg"],
-    alt: "Luxury white marble six-seater dining table with sculpted bronze ribbon base manufactured by MAC INTERIO Kirti Nagar",
+    alt: "Luxury white marble six-seater dining table with sculpted bronze ribbon base manufactured by MAC INTERIO New Delhi",
     desc: "A white marble top carried on a sweeping bronze ribbon base — the statement piece our workshop is known for.",
     material: "Marble top · Metal base (PVD finish options)",
-    style: "Contemporary luxury", seats: "6 Seater",
-    tags: ["Marble", "PVD Base", "6 Seater"]
+    style: "Contemporary luxury", seats: "Six-Seater",
+    tags: ["Marble", "PVD Base", "Six-Seater"]
   },
   {
     id: "aurelia-arch-dining",
     name: "Aurelia Arch Dining Table",
-    cat: "dining", catLabel: "Dining · 6 Seater",
+    cat: "dining", catLabel: "Dining · Six-Seater",
     img: "img16.jpg", gallery: ["img16.jpg"],
-    alt: "Oval white marble dining table with twin gold arch base and designer chairs by MAC INTERIO Delhi",
+    alt: "Oval white marble dining table with twin gold arch base and designer chairs by MAC INTERIO New Delhi",
     desc: "An oval marble top floating on twin gold arches — soft geometry with a distinctly architectural stance.",
     material: "Marble top · SS PVD gold base",
-    style: "Modern classic", seats: "6 Seater",
-    tags: ["Marble", "SS PVD Gold", "6 Seater"]
+    style: "Modern classic", seats: "Six-Seater",
+    tags: ["Marble", "SS PVD Gold", "Six-Seater"]
   },
   {
     id: "statuario-noir-dining",
     name: "Statuario Noir Dining Set",
-    cat: "dining", catLabel: "Dining · 6 Seater",
+    cat: "dining", catLabel: "Dining · Six-Seater",
     img: "img10.jpg", gallery: ["img10.jpg"],
-    alt: "Rectangular white marble six seater dining set with dark base and quilted ivory chairs in marble interior",
+    alt: "Rectangular white marble six-seater dining set with dark base and quilted ivory chairs in marble interior",
     desc: "Crisp white marble against a deep dark base, paired with quilted ivory seating for quiet contrast.",
     material: "Marble top · Wood & metal base",
-    style: "Contemporary", seats: "6 Seater",
-    tags: ["Marble", "Wood & Metal", "6 Seater"]
+    style: "Contemporary", seats: "Six-Seater",
+    tags: ["Marble", "Wood & Metal", "Six-Seater"]
   },
   {
-    id: "regal-onyx-dining",
+    id: "regal-stone-dining",
     name: "Regal Polished-Stone Dining Set",
-    cat: "dining", catLabel: "Dining · 6 Seater",
+    cat: "dining", catLabel: "Dining · Six-Seater",
     img: "img13.jpg", gallery: ["img13.jpg"],
-    alt: "Classic six seater dining table with glossy cream polished stone top and carved dark wood chairs at MAC INTERIO showroom",
+    alt: "Classic six-seater dining table with glossy cream polished stone top and carved dark wood chairs at MAC INTERIO showroom",
     desc: "A high-gloss cream stone top on carved dark wood — traditional craftsmanship finished in our own workshop.",
-    material: "Polished stone top (onyx / marble options) · Carved wood",
-    style: "Classic luxury", seats: "6 Seater",
-    tags: ["Stone Top", "Carved Wood", "6 Seater"]
+    material: "Polished stone top (marble options) · Carved wood",
+    style: "Classic luxury", seats: "Six-Seater",
+    tags: ["Stone Top", "Carved Wood", "Six-Seater"]
   },
   {
     id: "bianco-inlay-dining",
     name: "Bianco Inlay Dining Table",
-    cat: "dining", catLabel: "Dining · 6 Seater",
+    cat: "dining", catLabel: "Dining · Six-Seater",
     img: "img18.jpg", gallery: ["img18.jpg"],
-    alt: "White geometric inlay stone six seater dining table with blush upholstered chairs at Little Star Kirti Nagar showroom",
+    alt: "White geometric inlay stone six-seater dining table with blush upholstered chairs at Little Star showroom New Delhi",
     desc: "A geometric inlay stone top photographed in our showroom — subtle pattern work that rewards a closer look.",
     material: "Inlay stone top · Metal base (customisable)",
-    style: "Contemporary", seats: "6 Seater",
-    tags: ["Inlay Stone", "Showroom Piece", "6 Seater"]
+    style: "Contemporary", seats: "Six-Seater",
+    tags: ["Inlay Stone", "Showroom Piece", "Six-Seater"]
   },
   {
     id: "victorian-marble-dining",
     name: "Victorian Marble Dining Set",
-    cat: "dining", catLabel: "Dining · 6 Seater",
+    cat: "dining", catLabel: "Dining · Six-Seater",
     img: "img19.jpg", gallery: ["img19.jpg"],
-    alt: "White marble six seater dining set with carved Victorian style wooden legs and tufted cream chairs",
+    alt: "White marble six-seater dining set with carved Victorian style wooden legs and tufted cream chairs",
     desc: "Hand-finished turned legs meet a polished white marble top — heritage detailing, manufacturer direct.",
     material: "Marble top · Carved solid wood",
-    style: "Victorian classic", seats: "6 Seater",
-    tags: ["Marble", "Solid Wood", "6 Seater"]
+    style: "Victorian classic", seats: "Six-Seater",
+    tags: ["Marble", "Solid Wood", "Six-Seater"]
   },
   {
     id: "classic-turned-dining",
     name: "Classic Turned Dining Set",
-    cat: "dining", catLabel: "Dining · 6 Seater",
+    cat: "dining", catLabel: "Dining · Six-Seater",
     img: "img20.jpg", gallery: ["img20.jpg"],
-    alt: "White marble top six seater dining table with turned wooden legs styled in elegant interior",
+    alt: "White marble top six-seater dining table with turned wooden legs styled in elegant interior",
     desc: "Turned-wood joinery under a luminous marble top — a versatile set that settles into any dining room.",
     material: "Marble top · Turned wood",
-    style: "Transitional classic", seats: "6 Seater",
-    tags: ["Marble", "Turned Wood", "6 Seater"]
+    style: "Transitional classic", seats: "Six-Seater",
+    tags: ["Marble", "Turned Wood", "Six-Seater"]
   },
   {
     id: "monolith-dining",
     name: "Monolith Dining Set",
-    cat: "dining", catLabel: "Dining · 6 Seater",
+    cat: "dining", catLabel: "Dining · Six-Seater",
     img: "img21.jpg", gallery: ["img21.jpg"],
-    alt: "Minimal white marble six seater dining table with black base and light upholstered chairs",
+    alt: "Minimal white marble six-seater dining table with black base and light upholstered chairs",
     desc: "A study in restraint — white marble on a minimal dark base, sized for everyday six-seat living.",
     material: "Marble top · Metal / wood base",
-    style: "Minimal contemporary", seats: "6 Seater",
-    tags: ["Marble", "Minimal", "6 Seater"]
+    style: "Minimal contemporary", seats: "Six-Seater",
+    tags: ["Marble", "Minimal", "Six-Seater"]
   },
   {
     id: "heritage-turned-4seater",
     name: "Heritage Turned 4-Seater",
-    cat: "dining", catLabel: "Dining · 4 Seater",
+    cat: "dining", catLabel: "Dining · Four-Seater",
     img: "img14.jpg", gallery: ["img14.jpg", "img15.jpg"],
-    alt: "Compact white marble four seater dining table with turned wooden legs and tufted cream chairs",
+    alt: "Compact white marble four-seater dining table with turned wooden legs and tufted cream chairs",
     desc: "A compact four-seat marble table with turned legs and deep-buttoned chairs — made for smaller dining spaces.",
     material: "Marble top · Turned solid wood",
-    style: "Classic", seats: "4 Seater",
-    tags: ["Marble", "Solid Wood", "4 Seater"]
+    style: "Classic", seats: "Four-Seater",
+    tags: ["Marble", "Solid Wood", "Four-Seater"]
   },
   {
     id: "lattice-sheesham-4seater",
     name: "Lattice Wood 4-Seater",
-    cat: "dining", catLabel: "Dining · 4 Seater",
+    cat: "dining", catLabel: "Dining · Four-Seater",
     img: "img17.jpg", gallery: ["img17.jpg"],
-    alt: "Solid wood four seater dining table with lattice back chairs and cushioned seats",
+    alt: "Solid wood four-seater dining table with lattice back chairs and cushioned seats",
     desc: "Solid wood with open-lattice chair backs — honest joinery and an easy, everyday footprint.",
     material: "Solid wood",
-    style: "Casual classic", seats: "4 Seater",
-    tags: ["Solid Wood", "Compact", "4 Seater"]
+    style: "Casual classic", seats: "Four-Seater",
+    tags: ["Solid Wood", "Compact", "Four-Seater"]
   },
   {
     id: "sculpt-boucle-dining",
     name: "Sculpt Dining Set",
-    cat: "dining", catLabel: "Dining · 6 Seater",
+    cat: "dining", catLabel: "Dining · Six-Seater",
     img: "img3.jpg", gallery: ["img3.jpg"],
     alt: "Oval wooden dining table with sculptural boucle fabric chairs in warm minimalist dining room",
     desc: "An organically curved wood table wrapped in sculptural boucle seating — warmth, crafted to order.",
     material: "Wood top · Upholstered seating",
-    style: "Organic modern", seats: "6 Seater",
-    tags: ["Wood", "Designer Chairs", "6 Seater"]
+    style: "Organic modern", seats: "Six-Seater",
+    tags: ["Wood", "Designer Chairs", "Six-Seater"]
   },
   {
     id: "aura-center-table",
@@ -197,7 +197,7 @@ const PRODUCTS = [
     name: "Aureole PVD Glass Partition",
     cat: "custom", catLabel: "Custom · Partition",
     img: "img12.jpg", gallery: ["img12.jpg"],
-    alt: "Gold PVD metal and fluted glass room partition divider crafted by MAC INTERIO Delhi",
+    alt: "Gold PVD metal and fluted glass room partition divider crafted by MAC INTERIO New Delhi",
     desc: "Brushed-gold frames with fluted glass — a room divider that defines space without closing it off.",
     material: "SS PVD gold · Fluted glass",
     style: "Architectural", seats: "Made to measure",
@@ -236,7 +236,7 @@ function waCustomURL(){
 I want to discuss a custom furniture requirement.
 
 My preferred product/category is:
-[Please type here — e.g. 6-seater marble dining table]
+[Please type here — e.g. Six-Seater dining set]
 
 I would like to discuss size, material, colour, finish and pricing.`;
   return "https://wa.me/" + WA_NUMBER + "?text=" + encodeURIComponent(msg);

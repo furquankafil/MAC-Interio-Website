@@ -1,4 +1,4 @@
-/* MAC INTERIO — Little Star · Shared interactions */
+/* MAC INTERIO · Shared interactions */
 (function(){
   "use strict";
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
