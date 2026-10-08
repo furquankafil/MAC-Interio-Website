@@ -20,23 +20,101 @@
   /* ---------- Mobile menu ---------- */
   const burger = document.querySelector(".hamburger");
   const mmenu = document.querySelector(".mobile-menu");
+  let lastFocus = null;
+  const lockCount = { n: 0 };
+  const lockScroll = () => {
+    lockCount.n += 1;
+    document.body.style.overflow = "hidden";
+  };
+  const unlockScroll = () => {
+    lockCount.n = Math.max(0, lockCount.n - 1);
+    if(lockCount.n === 0) document.body.style.overflow = "";
+  };
+  window.__macScrollLock = { lockScroll, unlockScroll };
+  /* Focus helper: CSS reveal transitions (opacity/visibility/clip-path)
+     keep targets unfocusable for the first frames, so retry on
+     transitionend plus a guarded timeout fallback. */
+  const focusWhenReady = (target, scope) => {
+    if(!target) return;
+    const tryFocus = () => {
+      if(document.activeElement === target) return true;
+      // Don't steal focus if the user already moved somewhere sensible
+      if(scope && scope.contains(document.activeElement) && document.activeElement !== document.body) return true;
+      target.focus({ preventScroll: true });
+      return document.activeElement === target;
+    };
+    if(tryFocus()) return;
+    const done = (e) => {
+      if(e && e.target !== target && e.target !== scope) return;
+      if(tryFocus() && scope){
+        scope.removeEventListener("transitionend", done);
+        clearTimeout(timer);
+      }
+    };
+    if(scope) scope.addEventListener("transitionend", done);
+    const timer = setTimeout(() => {
+      tryFocus();
+      if(scope) scope.removeEventListener("transitionend", done);
+    }, reduceMotion ? 60 : 600);
+  };
   const setMenu = (open) => {
     if(!mmenu || !burger) return;
+    const isOpen = mmenu.classList.contains("open");
+    if(open === isOpen) return;
     mmenu.classList.toggle("open", open);
     burger.classList.toggle("open", open);
     burger.setAttribute("aria-expanded", open ? "true" : "false");
     burger.setAttribute("aria-label", open ? "Close menu" : "Open menu");
     document.body.classList.toggle("menu-open", open);
-    if(open && !reduceMotion){
-      mmenu.querySelectorAll("a.m-link").forEach((l,i) => {
-        l.style.transitionDelay = (0.08 + i*0.06) + "s";
-      });
+    if(open){
+      lastFocus = document.activeElement;
+      lockScroll();
+      if(!reduceMotion){
+        mmenu.querySelectorAll("a.m-link").forEach((l,i) => {
+          l.style.transitionDelay = (0.08 + i*0.06) + "s";
+        });
+      }
+      const first = mmenu.querySelector("a.m-link");
+      focusWhenReady(first, mmenu);
+    }else{
+      unlockScroll();
+      mmenu.querySelectorAll("a.m-link").forEach(l => { l.style.transitionDelay = ""; });
+      if(lastFocus && lastFocus.focus) lastFocus.focus({ preventScroll: true });
+      else burger.focus({ preventScroll: true });
     }
   };
   if(burger && mmenu){
-    burger.addEventListener("click", () => setMenu(!mmenu.classList.contains("open")));
+    burger.addEventListener("click", (e) => {
+      e.stopPropagation();
+      setMenu(!mmenu.classList.contains("open"));
+    });
     mmenu.querySelectorAll("a").forEach(a => a.addEventListener("click", () => setMenu(false)));
+    // Clicking the menu backdrop (not a link/button) closes it
+    mmenu.addEventListener("click", (e) => {
+      if(e.target === mmenu) setMenu(false);
+    });
+    // Clicking anywhere outside header + menu closes it
+    document.addEventListener("click", (e) => {
+      if(!mmenu.classList.contains("open")) return;
+      const header = document.querySelector(".site-header");
+      if(header && header.contains(e.target)) return;
+      if(mmenu.contains(e.target)) return;
+      setMenu(false);
+    });
     document.addEventListener("keydown", e => { if(e.key === "Escape") setMenu(false); });
+    // Trap Tab inside the open menu for keyboard users
+    document.addEventListener("keydown", e => {
+      if(e.key !== "Tab" || !mmenu.classList.contains("open")) return;
+      const f = [...mmenu.querySelectorAll("a, button")].filter(el => !el.disabled && el.offsetParent !== null);
+      if(!f.length) return;
+      const first = f[0], last = f[f.length - 1];
+      if(e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
+      else if(!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
+    });
+    // If resized to desktop nav, ensure the mobile menu never lingers
+    window.addEventListener("resize", () => {
+      if(window.innerWidth > 1024 && mmenu.classList.contains("open")) setMenu(false);
+    });
   }
 
   /* ---------- Reveal on scroll ---------- */
@@ -99,9 +177,11 @@
 
   /* ---------- Product modal ---------- */
   const modal = document.getElementById("product-modal");
+  let modalReturnFocus = null;
   function openProduct(id){
     const p = productById(id);
     if(!p || !modal) return;
+    modalReturnFocus = document.activeElement;
     modal.querySelector(".modal-media").innerHTML =
       `<img src="./${p.img}" alt="${p.alt}">`;
     modal.querySelector(".modal-body").innerHTML = `
@@ -120,13 +200,17 @@
       </div>
       <p class="modal-note">Your enquiry opens WhatsApp with the product name, category and image reference (<strong>${p.img}</strong>) already written — just press send, and attach the product photo in the chat so our team can confirm the exact piece.</p>`;
     modal.classList.add("open");
-    document.body.style.overflow = "hidden";
-    modal.querySelector(".modal-close").focus();
+    if(window.__macScrollLock) window.__macScrollLock.lockScroll();
+    else document.body.style.overflow = "hidden";
+    modal.querySelector(".modal-panel").scrollTop = 0;
+    focusWhenReady(modal.querySelector(".modal-close"), modal.querySelector(".modal-panel"));
   }
   function closeProduct(){
-    if(!modal) return;
+    if(!modal || !modal.classList.contains("open")) return;
     modal.classList.remove("open");
-    document.body.style.overflow = "";
+    if(window.__macScrollLock) window.__macScrollLock.unlockScroll();
+    else document.body.style.overflow = "";
+    if(modalReturnFocus && modalReturnFocus.focus) modalReturnFocus.focus({ preventScroll: true });
   }
   document.addEventListener("click", e => {
     const v = e.target.closest("[data-view]");
@@ -145,7 +229,7 @@
 
   /* ---------- Gallery lightbox ---------- */
   const lb = document.getElementById("lightbox");
-  let lbItems = [], lbIndex = 0;
+  let lbItems = [], lbIndex = 0, lbReturnFocus = null;
   function lbShow(i){
     if(!lb || !lbItems.length) return;
     lbIndex = (i + lbItems.length) % lbItems.length;
@@ -156,14 +240,19 @@
   }
   function lbOpen(items, i){
     if(!lb) return;
+    lbReturnFocus = document.activeElement;
     lbItems = items; lb.classList.add("open");
-    document.body.style.overflow = "hidden";
+    if(window.__macScrollLock) window.__macScrollLock.lockScroll();
+    else document.body.style.overflow = "hidden";
     lbShow(i);
+    focusWhenReady(lb.querySelector(".lb-close"), lb);
   }
   function lbClose(){
-    if(!lb) return;
+    if(!lb || !lb.classList.contains("open")) return;
     lb.classList.remove("open");
-    document.body.style.overflow = "";
+    if(window.__macScrollLock) window.__macScrollLock.unlockScroll();
+    else document.body.style.overflow = "";
+    if(lbReturnFocus && lbReturnFocus.focus) lbReturnFocus.focus({ preventScroll: true });
   }
   document.addEventListener("click", e => {
     const g = e.target.closest("[data-lightbox]");
@@ -187,7 +276,38 @@
     if(e.key === "Escape") lbClose();
     if(e.key === "ArrowLeft") lbShow(lbIndex - 1);
     if(e.key === "ArrowRight") lbShow(lbIndex + 1);
+    // Keep Tab inside the lightbox while open
+    if(e.key === "Tab"){
+      const f = [...lb.querySelectorAll("button, a[href]")].filter(el => el.offsetParent !== null);
+      if(!f.length) return;
+      const first = f[0], last = f[f.length - 1];
+      if(e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
+      else if(!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
+    }
   });
+  // Keep Tab inside the product modal while open
+  document.addEventListener("keydown", e => {
+    if(e.key !== "Tab" || !modal || !modal.classList.contains("open")) return;
+    const panel = modal.querySelector(".modal-panel");
+    const f = [...panel.querySelectorAll("button, a[href], input, select, textarea")].filter(el => el.offsetParent !== null);
+    if(!f.length) return;
+    const first = f[0], last = f[f.length - 1];
+    if(e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
+    else if(!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
+  });
+  // Swipe left/right on touch to move through lightbox images
+  if(lb){
+    let sx = null;
+    lb.querySelector("img").addEventListener("touchstart", e => {
+      sx = e.touches[0].clientX;
+    }, { passive: true });
+    lb.querySelector("img").addEventListener("touchend", e => {
+      if(sx === null) return;
+      const dx = e.changedTouches[0].clientX - sx;
+      if(Math.abs(dx) > 40) lbShow(lbIndex + (dx < 0 ? 1 : -1));
+      sx = null;
+    }, { passive: true });
+  }
 
   /* ---------- Collection filters ---------- */
   document.querySelectorAll("[data-filter-bar]").forEach(bar => {
