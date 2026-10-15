@@ -1,0 +1,13 @@
+{
+  "name": "mac-interio-site",
+  "version": "1.0.0",
+  "private": true,
+  "description": "MAC INTERIO static website — regression tests guard mobile image rendering and layout.",
+  "scripts": {
+    "test": "node tests/mobile-images.regression.mjs",
+    "test:regression": "node tests/mobile-images.regression.mjs"
+  },
+  "devDependencies": {
+    "playwright-core": "^1.49.1"
+  }
+}

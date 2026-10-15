@@ -117,13 +117,45 @@
     });
   }
 
-  /* ---------- Reveal on scroll ---------- */
-  const io = new IntersectionObserver(entries => {
+  /* ---------- Reveal on scroll ----------
+     NOTE: never clip the observed container itself (e.g. clip-path on
+     .img-reveal). In Chromium the observer ratio is computed on the
+     clipped region, so a fully-clipped box reports ratio 0 forever and
+     the reveal deadlocks, leaving a blank box where the photo belongs.
+     The curtain now runs on the inner <img>; observers watch boxes. */
+  const revealOne = (el) => {
+    if(el.classList.contains("in")) return;
+    el.classList.add("in");
+    if(window.__macRevealIO) window.__macRevealIO.unobserve(el);
+  };
+  const ioSupported = ("IntersectionObserver" in window);
+  const io = ioSupported ? new IntersectionObserver(entries => {
     entries.forEach(e => {
       if(e.isIntersecting){ e.target.classList.add("in"); io.unobserve(e.target); }
     });
-  }, {threshold: 0.12, rootMargin: "0px 0px -6% 0px"});
-  document.querySelectorAll(".reveal, .img-reveal").forEach(el => io.observe(el));
+  }, {threshold: 0.12, rootMargin: "0px 0px -6% 0px"}) : null;
+  window.__macRevealIO = io;
+  const observeReveals = (scope) => {
+    (scope || document).querySelectorAll(".reveal, .img-reveal").forEach(el => {
+      if(el.classList.contains("in")) return;
+      if(io) io.observe(el);
+      else el.classList.add("in");
+    });
+  };
+  observeReveals(document);
+  /* Safety net: if an element sits inside the viewport for a while but
+     its observer never fires (failed/clipped geometry, blocked callback),
+     reveal it anyway. Also covers dynamically injected cards. Runs once,
+     a few seconds after load — it cannot hide anything, only un-hide. */
+  window.addEventListener("load", () => {
+    setTimeout(() => {
+      const vh = window.innerHeight || document.documentElement.clientHeight;
+      document.querySelectorAll(".reveal:not(.in), .img-reveal:not(.in)").forEach(el => {
+        const r = el.getBoundingClientRect();
+        if(r.bottom > -80 && r.top < vh + 80) revealOne(el);
+      });
+    }, 2500);
+  });
 
   /* ---------- Toast ---------- */
   let toastTimer;
@@ -172,7 +204,7 @@
     if(ids.length) list = ids.map(productById).filter(Boolean);
     else if(filter !== "all") list = list.filter(p => p.cat === filter);
     grid.innerHTML = list.map(cardHTML).join("");
-    grid.querySelectorAll(".reveal").forEach(el => io.observe(el));
+    observeReveals(grid);
   });
 
   /* ---------- Product modal ---------- */
